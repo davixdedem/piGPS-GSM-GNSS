@@ -1,2 +1,2 @@
 # piGPS
-Turn your Raspberry Pi to an accurate tracking system
+Turn your Raspberry Pi into an accurate tracking system
