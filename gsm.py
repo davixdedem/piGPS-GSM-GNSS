@@ -149,6 +149,16 @@ class GSM():
         except Exception as e:
             self.log.log_message(f"Caught exc. on setupSIM: {e}")
             return False
+    
+    def readAllUnreadMessages(self):
+        try:
+            self.writeCommand(f'AT+CSTT={self.apn}\r\n'.encode("utf-8"))
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to AT+CSTT={self.apn}: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            time.sleep(1)                        
+        except Exception as e:
+            self.log.log_message(f"Caught exc. on setupSIM: {e}")
+            return False        
 
     def startAndStopGPS(self,stop=False):
         try:
@@ -360,7 +370,7 @@ class GSM():
 
 class LOG():
     def __init__(self) -> None:
-        self.log_file = '/home/pi/piHat/logs/gsm.log'
+        self.log_file = '/home/pi/piHat/logs/gps.log'
         self.debug = True
         logging.basicConfig(
             level=logging.INFO,

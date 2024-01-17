@@ -7,7 +7,7 @@ class GPIO():
     def __init__(self) -> None:
         self.pin_number = 17  
         self.button = Button(self.pin_number)
-        self.log_file = '/home/pi/piHat/logs/gpio.log'
+        self.log_file = '/home/pi/piHat/logs/gps.log'
         self.isRecording = False
         self.debug = True
         self.camera = camera.CAMERA()
