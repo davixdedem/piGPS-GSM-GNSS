@@ -18,8 +18,9 @@ This project transforms your Raspberry Pi into a versatile GPS-GSM-GNSS (Global 
 Before getting started, ensure you have the following hardware and software:
 
 - Raspberry Pi (compatible models: [list compatible models])
-- GPRS,GSM,GNSS module (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf)
-- ![Project Logo](hatModule.png)
+- GPRS,GSM,GNSS module ()
+- ![GPRS,GSM,GNSS module](hatModule.png)
+  The manual is available here: (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf)
 - [Any other specific hardware requirements]
 
 ## Installation
