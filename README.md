@@ -9,18 +9,16 @@ This project transforms your Raspberry Pi into a versatile GPS-GSM-GNSS (Global 
 - Real-time GPS tracking
 - GSM communication for remote interaction
 - GNSS for precise positioning
+- Videocamera recording
 - Modular design for easy customization
 - Support for external antennas
-- Detailed documentation
 
 ## Prerequisites
 
 Before getting started, ensure you have the following hardware and software:
 
 - Raspberry Pi (compatible models: [list compatible models])
-- GPS module (compatible models: [list compatible modules])
-- GSM module (compatible models: [list compatible modules])
-- GNSS module (compatible models: [list compatible modules])
+- GPRS,GSM,GNSS module (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf)
 - [Any other specific hardware requirements]
 
 ## Installation
