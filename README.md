@@ -19,7 +19,7 @@ Before getting started, ensure you have the following hardware and software:
 
 - Raspberry Pi (compatible models: [list compatible models])
 - GPRS,GSM,GNSS module (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf)
-- ![Project Logo](Screenshot from 2024-01-20 15-49-35.png)
+- ![Project Logo](hatModule.png)
 - [Any other specific hardware requirements]
 
 ## Installation
