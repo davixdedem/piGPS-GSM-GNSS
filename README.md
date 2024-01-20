@@ -4,7 +4,7 @@
 This project integrates GSM (Global System for Mobile Communications) for mobile communication, GPRS (General Packet Radio Service) for efficient data transmission, and GNSS (Global Navigation Satellite System) for precise positioning. Additionally, it incorporates a CCTV (Closed-Circuit Television) system using video cameras for surveillance. Together, these technologies enable a comprehensive solution with mobile communication, data connectivity, accurate navigation, and visual monitoring capabilities."<br>
 
 - ## **Description**
-Thanks to the Board GSM/GPRS/GNSS for Raspberry Pi we will be able to monitor the current position of our SBC through GPS Coordinates and GSM text messagges, also you'll have a PiCamera which records if a specific GPIO get an impulse.<br>
+Thanks to the Board GSM/GPRS/GNSS for Raspberry Pi we will be able to monitor the current position of our SBC through GPS Coordinates and GSM text messagges, on the other side GPIO's will going to listening any impulse, and if a specific one will get it, piCamera will start to record a video.<br>
 ![Screencast](screencast.png) <br>
 
 In the context of this project, we use the **CubeCell – AB01 Dev-Board development board** in **AT Command** mode to enable interaction with a smartphone and initiate data exchange via radio frequencies. The application allows initiating simple text conversations to communicate with other users within the LoRa range. One of the main objectives of this project is to simplify the use of LoRa technology, making it accessible to everyone and facilitating bidirectional point-to-point communication.
