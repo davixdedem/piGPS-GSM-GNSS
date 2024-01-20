@@ -7,8 +7,7 @@ This project integrates GSM (Global System for Mobile Communications) for mobile
 Thanks to the GSM/GPRS/GNSS board for Raspberry Pi, we will be able to monitor the current position of our SBC using GPS coordinates and receive GSM text messages. On the GPIO side, it will listen for all impulses, and if a specific one is detected, the PiCamera will start recording a video.<br>
 ![Screencast](screencast.png) <br>
 
-In the context of this project, we use the **CubeCell – AB01 Dev-Board development board** in **AT Command** mode to enable interaction with a smartphone and initiate data exchange via radio frequencies. The application allows initiating simple text conversations to communicate with other users within the LoRa range. One of the main objectives of this project is to simplify the use of LoRa technology, making it accessible to everyone and facilitating bidirectional point-to-point communication.
-**Note: To ensure proper functionality, it is essential that the board contains the source code available from the official examples provided by Heltec Cube Cell**.<br>
+In the context of this project, we use the following **GSM/GPRS/GNSS board**: (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf)
 
 - ## Step By Step
 1. [Prerequisites](#prerequisites)<br>
