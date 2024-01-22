@@ -4,7 +4,8 @@
 This project integrates GSM (Global System for Mobile Communications) for mobile communication, GPRS (General Packet Radio Service) for efficient data transmission, and GNSS (Global Navigation Satellite System) for precise positioning. Additionally, it incorporates a CCTV (Closed-Circuit Television) system using video cameras for surveillance. Together, these technologies enable a comprehensive solution with mobile communication, data connectivity, accurate navigation, and visual monitoring capabilities."<br>
 
 - ## **Description**
-Thanks to the GSM/GPRS/GNSS board for Raspberry Pi, we will be able to monitor the current position of our SBC using GPS coordinates and receive GSM text messages. On the GPIO side, it will listen for all impulses, and if a specific one is detected, the PiCamera will start recording a video.<br>
+Thanks to the GSM/GPRS/GNSS board for Raspberry Pi, we will be able to monitor the current position of our SBC using GPS coordinates by GSM text messages. 
+On the GPIO side, they will listen for all impulses and if one of those is detected, the PiCamera will start recording a video.<br>
 ![Screencast](screencast.png) <br>
 
 In the context of this project, we use the following **GSM/GPRS/GNSS board**: (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf)
@@ -12,15 +13,12 @@ In the context of this project, we use the following **GSM/GPRS/GNSS board**: (h
 - ## Step By Step
 1. [Prerequisites](#prerequisites)<br>
 2. [Device Preparation](#preparazione)<br>
-3. [Application Configuration](#configurazione)<br>
+3. [Setup](#configurazione)<br>
 4. [Pros & Cons](#pros-and-cons)<br>
 5. [Curiosities](#curiosities)<br>
 6. [Support](#support)<br>
    
 - # 1. Prerequisites <div id="prerequisites"></div>
-**Android Version**: 13 or later.<br>
-**Storage Space**: Minimum 16.6 MB.<br>
-**RAM**: Recommended 2 GB or higher.<br>
 **CubeCell – AB01 Dev-Board**: Heltec development board.<br>
 **USB Cable**: USB cable to connect the board to the Smartphone.
 
