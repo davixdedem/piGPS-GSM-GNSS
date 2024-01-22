@@ -26,7 +26,7 @@ class SYNC():
 class GPS():
     def __init__(self,port,gsm) -> None:
         self.debug = True
-        self.timer = 120
+        self.timer = 60
         self.timer_sync_ntp = 150
         self.log_file = '/home/pi/piHat/logs/gps.log'
         logging.basicConfig(
@@ -61,6 +61,9 @@ class GPS():
         self.log.log_message("Successfully opened port...")
         signal.signal(signal.SIGINT, self.close_connection)
         self.minDistance = 50
+        self.times_that_difference_is_over_threshold = 0
+        self.timer_start_and_stop_gps = 600
+        self.gpsIsOn = True
 
     def createTable(self):
         try:
@@ -169,6 +172,8 @@ class GPS():
         
     def stopDevice(self):
         try:
+            self.log.log_message("I'm going to turn off the GPS...")
+
             self.writeCommand('AT\r\n'.encode("utf-8"))
             rcv = self.port.readline()  # Read until a new line is encountered
             self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
@@ -181,6 +186,22 @@ class GPS():
         except Exception as e:
             self.log.log_message(f"Caught exc. on stopDevice: {e}")
             return False
+
+    def startDevice(self):
+        try:
+            self.log.log_message("I'm going to turn on the GPS...")
+            self.writeCommand('AT\r\n'.encode("utf-8"))
+            rcv = self.port.readline()  # Read until a new line is encountered
+            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            time.sleep(0.1)
+
+            self.writeCommand('AT+CGNSPWR=1\r\n'.encode("utf-8"))  # to power off the GPS
+            rcv = self.port.readline()  # Read until a new line is encountered
+            self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            time.sleep(.1)
+        except Exception as e:
+            self.log.log_message(f"Caught exc. on startDevice: {e}")
+            return False            
         
     def populeDb(self):
         try:
@@ -189,10 +210,10 @@ class GPS():
             cursor.execute('''
                 INSERT INTO gps (latitude, longitude, altitude, groundSpeed, latDir, longDir, satellites,
                                 geoidSeparation, pDop, hDop, vDop, satInformation, fixQuality,
-                                totalMessages, messageNumber)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                totalMessages, messageNumber, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (self.latitude, self.longitude, self.altitude, self.groundSpeed, self.latDir, self.longDir, self.satellites, self.geoidSeparation,
-                self.pDop, self.hDop, self.vDop, str(self.satInformation), self.fixQuality, self.totalMessages, self.messageNumber))
+                self.pDop, self.hDop, self.vDop, str(self.satInformation), self.fixQuality, self.totalMessages, self.messageNumber, self.timestampGPS))
             self.conn.commit()
         except Exception as e:
             self.log.log_message(f"Caught exc. on populeDb: {e}")
@@ -204,12 +225,14 @@ class GPS():
             cursor = conn.cursor()
             try:
                 # Modify the query to exclude rows where latitude or longitude is 0 or NULL
-                cursor.execute("SELECT latitude, longitude FROM gps "
-                            "WHERE latitude IS NOT NULL AND longitude IS NOT NULL "
-                            "AND latitude != 0 AND longitude != 0 "
-                            "ORDER BY timestamp DESC LIMIT 1")
+                # cursor.execute("SELECT latitude, longitude FROM gps "
+                #             "WHERE latitude IS NOT NULL AND longitude IS NOT NULL "
+                #             "AND latitude != 0 AND longitude != 0 "
+                #             "ORDER BY timestamp DESC LIMIT 1")
+                cursor.execute("SELECT latitude, longitude FROM gps ORDER BY id DESC LIMIT 1")                
                 row = cursor.fetchone()
                 if row:
+
                     last_latitude, last_longitude = row
                     return last_latitude, last_longitude
                 else:
@@ -226,11 +249,13 @@ class GPS():
     def readingData(self):
         try:
             start_time = time.time()
+            start_timeGps = time.time()
             ck = 1
             while ck == 1:
                 try:
                     current_time = time.time()
                     elapsed_time = current_time - start_time
+                    elapsed_timeGps = current_time - start_timeGps
                     fd = self.port.readline()  
                     if fd:
                         decoded_data = fd.decode("utf-8").strip()  # Decode and strip newline characters
@@ -281,25 +306,26 @@ class GPS():
                                 msg = pynmea2.parse(decoded_data)
                                 self.latitude = msg.latitude
                                 self.longitude = msg.longitude
-
                                 if str(self.latitude) != "0.0" and str(self.longitude) != "0.0":
-                                    # Check the implementation of getLastCoordinates() to make sure it returns exactly two values (latitude and longitude)
                                     last_coordinates = self.getLastCoordinates()
-                                    
                                     if len(last_coordinates) == 2:
                                         lastLatitude, lastLongitude = last_coordinates
+                                        self.log_message(f"Last coordinates are {lastLatitude} and {lastLongitude}")
                                         self.log.log_message(f"Latitude is {self.latitude} and longitude is {self.longitude}")
                                         lastDistance = self.haversine_distance((lastLatitude, lastLongitude), (self.latitude, self.longitude))
                                         self.log.log_message(f"Difference between coordinates is {lastDistance} meters")
-
                                         if lastDistance > self.minDistance:
-                                            self.log.log_message(f"GPS is moved; it's time to send a notification message...")
+                                            self.times_that_difference_is_over_threshold += 1
+                                            if self.times_that_difference_is_over_threshold > 50:
+                                                self.times_that_difference_is_over_threshold = 0
+                                                self.log.log_message(f"GPS is moved; it's time to send a notification message...")
+                                                isMessageSent = self.gsm.readMessageByNumber("007",True,lastDistance)                            
+                                                if isMessageSent:
+                                                    self.log.log_message("The message was succesfully sendt.")                                                
                                     else:
                                         self.log.log_message("getLastCoordinates did not return two values.")
-
                                 else:
                                     self.log.log_message("GPS datas are not synced yet...")
-
                                 self.timestamp = msg.timestamp
                                 if self.timestamp:
                                     timestamp_str = str(self.timestamp).split('+')[0]  
@@ -313,14 +339,12 @@ class GPS():
                                     combined_datetime += timedelta(hours=1)
                                     self.log.log_message(f"Datetime is: {combined_datetime}")
                                     self.timestampGPS = combined_datetime
-
                                 self.fixQuality = msg.gps_qual
                                 self.satellites = msg.num_sats
                                 self.altitude = msg.altitude
                                 self.geoidSeparation = msg.geo_sep
                                 self.latDir = msg.lat_dir
                                 self.longDir = msg.lon_dir
-
                             except Exception as e:
                                 self.log.log_message(f"Could not extract values from msg: {e}")
 
@@ -334,10 +358,18 @@ class GPS():
                         elif b'+CMT' in fd:
                             number = self.port.readline().decode('utf-8').strip()
                             self.log.log_message(f"I received a message: {fd}")
-                            isMessageSent = self.gsm.readMessageByNumber(number)                            
+                            isMessageSent = self.gsm.readMessageByNumber(number) 
+                            self.gpsIsOn = True                           
                             if isMessageSent:
-                                self.log.log_message("The message was succesfully sendt.")                                
-                        if elapsed_time >= self.timer:
+                                self.log.log_message("The message was succesfully sendt.")   
+                        elif b'+CLIP' in fd:
+                            number = self.port.readline().decode('utf-8').strip()
+                            self.log.log_message(f"I received a message: {fd}")
+                            isMessageSent = self.gsm.readMessageByNumber("007")           
+                            self.gpsIsOn = True                           
+                            if isMessageSent:
+                                self.log.log_message("The message was succesfully sendt.")                       
+                        elif elapsed_time >= self.timer:
                             self.log.log_message(f"Writing gps data into db: lat:{self.latitude}, long:{self.longitude}, alt:{self.altitude}")
                             if str(self.latitude) != "0.0" and str(self.longitude) != "0.0":
                                 self.populeDb()
@@ -349,7 +381,19 @@ class GPS():
                                         self.log.log_message("The message was succesfully sendt.")                                        
                                     time.sleep(10)
                             start_time = time.time()
-                        time.sleep(.1)
+                        elif elapsed_timeGps >= 180:
+                            if self.gpsIsOn:
+                                self.log.log_message("I'm gonna stop GPS for 1 minute...")
+                                self.stopDevice()
+                                self.gpsIsOn = False
+                                start_timeGps = time.time()
+                    elif elapsed_timeGps >= 30:
+                        if not self.gpsIsOn:
+                            self.log.log_message("I'm gonna start GPS for 5 minutes...")
+                            self.startDevice()
+                            self.gpsIsOn = True
+                            start_timeGps = time.time()
+                    time.sleep(.1)
                 except Exception as e:
                     self.log.log_message(f"Caught1 exc. on readingData: {e}")
         except Exception as e:

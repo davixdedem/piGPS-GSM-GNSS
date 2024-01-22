@@ -1,4 +1,3 @@
-import re
 import time
 import serial
 import logging
@@ -19,7 +18,7 @@ class GSM():
         self.port = port
         self.isGpsStopped = False
         self.powerPin = 4
-        self.timer_keep_send_message = 60
+        self.timer_keep_send_message = 600
 
         self.createTableMessage()
         self.createTableGps()   
@@ -88,10 +87,20 @@ class GSM():
             self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
             time.sleep(1)   
 
+            self.writeCommand(f'AT+CGNSPWR=0\r\n'.encode("utf-8"))
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to AT+CGNSPWR=0: {rcv.decode('utf-8').strip()}") 
+            time.sleep(1)              
+
             self.writeCommand(f'ATD{self.receiverNumber};\r\n'.encode("utf-8"))
             rcv = self.port.readline()  # Read until a new line is encountered
             self.log.log_message(f"Answer to ATD: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
-            time.sleep(0.1)
+            time.sleep(60)
+
+            self.writeCommand(f'AT+CGNSPWR=1\r\n'.encode("utf-8"))
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}") 
+            time.sleep(1)              
 
         except Exception as e:
             self.log.log_message(f"Caught exc. on callNumber: {e}")
@@ -106,7 +115,7 @@ class GSM():
                 cursor.execute("SELECT latitude, longitude, timestamp FROM gps "
                             "WHERE latitude IS NOT NULL AND longitude IS NOT NULL "
                             "AND latitude != 0 AND longitude != 0 "
-                            "ORDER BY timestamp DESC LIMIT 1")
+                            "ORDER BY id DESC LIMIT 1")
                 row = cursor.fetchone()
                 if row:
                     last_latitude, last_longitude, timestamp = row
@@ -176,7 +185,7 @@ class GSM():
             self.log.log_message(f"Caught exc. on startAndStopGPS: {e}")
             return False  
     
-    def readMessageByNumber(self,number):
+    def readMessageByNumber(self,number,gpsHasMoved=False,distance=False):
         try:
             try:
                 self.log.log_message(f"I got the number {number}")
@@ -189,8 +198,12 @@ class GSM():
                         self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}") 
                         time.sleep(1)  
 
-                        self.sendMessage(message=str(f"GPS:{coordinates[0]},{coordinates[1]} - DT: {coordinates[2]}."))
+                        if not gpsHasMoved:
+                            message=str(f"GPS:{coordinates[0]},{coordinates[1]} - DT: {coordinates[2]}.")
+                        else:
+                            message = f"Device has moved about {distance} meters. GPS:{coordinates[0]},{coordinates[1]} - DT: {coordinates[2]}."
 
+                        self.sendMessage(message=message)
                         self.writeCommand(f'AT+CGNSPWR=1\r\n'.encode("utf-8"))
                         rcv = self.port.readline() 
                         self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}") 

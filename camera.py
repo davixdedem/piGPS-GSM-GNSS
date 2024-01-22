@@ -11,7 +11,6 @@ class CAMERA():
         self.videoPath = "/home/pi/Videos/"
         self.video_filename = None
         self.debug = True
-        self.button = Button(17)  # Change to the appropriate GPIO pin
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
@@ -35,7 +34,6 @@ class CAMERA():
             self.video_filename = video_filename
             self.log_message("Start recording...")
             self.camera.start_recording(self.videoPath + video_filename, format='h264')
-            self.button.wait_for_press()  # Wait for the button press to stop recording
         except Exception as e:
             self.log_message(f"An error occurred: {e}")
         finally:

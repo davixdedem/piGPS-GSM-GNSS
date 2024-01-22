@@ -14,14 +14,14 @@ if __name__ == "__main__":
     #--GSM--#
     gsm = gsm.GSM(port)
 
+    #--GPIO--#
+    gpio = gpio.GPIO(gsm)
+    tGpioReading = Thread(target=gpio.startReading)
+
     #--GPS--#
     gps = gps.GPS(port,gsm)
     tGPSReadingData = Thread(target=gps.readingData)
     tSyncingTime = Thread(target=gps.startSyncingTime)
-
-    #--GPIO--#
-    #gpio = gpio.GPIO()
-    #tGpioReading = Thread(target=gpio.startReading)
 
     #--DATABASE--#
     db = database.DATABASE()
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     gps.initDevice()
     time.sleep(timer_sleep)
 
-    #tGpioReading.start()
+    tGpioReading.start()
     tSyncingTime.start()
     tFlushTables.start()
     tGPSReadingData.start()
