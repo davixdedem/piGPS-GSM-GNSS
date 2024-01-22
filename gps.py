@@ -1,4 +1,5 @@
 import os
+import json
 import time
 import signal
 import logging
@@ -6,6 +7,8 @@ import sqlite3
 import pynmea2
 from datetime import datetime,timedelta
 from math import radians, sin, cos, sqrt, atan2
+
+CONFIGURATION_PATH = "/home/pi/piHat/configuration"
 
 class SYNC():
     def __init__(self) -> None:
@@ -26,9 +29,13 @@ class SYNC():
 class GPS():
     def __init__(self,port,gsm) -> None:
         self.debug = True
-        self.timer = 60
-        self.timer_sync_ntp = 150
-        self.log_file = '/home/pi/piHat/logs/gps.log'
+        self.timer = self.read_configuration(CONFIGURATION_PATH,"timer")
+        self.timer_sync_ntp = self.read_configuration(CONFIGURATION_PATH,"timer_sync_ntp")
+        self.log_file = self.read_configuration(CONFIGURATION_PATH,"logPath")
+        self.dbPath = self.read_configuration(CONFIGURATION_PATH,"dbPath")
+        self.minDistance = self.read_configuration(CONFIGURATION_PATH,"minDistance")
+        self.minRunDistance = self.read_configuration(CONFIGURATION_PATH,"minRunDistance")
+
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
@@ -36,23 +43,12 @@ class GPS():
                 logging.FileHandler(self.log_file),
                 logging.StreamHandler()
             ])
-        self.latitude = None
-        self.longitude = None
-        self.altitude = None
-        self.groundSpeed = None
-        self.latDir = None
-        self.longDir = None
-        self.satellites = None
-        self.geoidSeparation = None
-        self.pDop = None
-        self.hDop = None
-        self.vDop = None
-        self.satInformation = None
-        self.fixQuality = None
-        self.totalMessages = None
-        self.messageNumber = None
-        self.satelitesInView = None
-        self.timestampGPS = None
+        
+        self.latitude = self.longitude = self.altitude = self.groundSpeed = None
+        self.latDir = self.longDir = self.satellites = self.geoidSeparation = None
+        self.pDop = self.hDop = self.vDop = self.satInformation = self.fixQuality = None
+        self.totalMessages = self.messageNumber = self.satelitesInView = self.timestampGPS = None
+        
         self.createTable()
         self.log = LOG()
         self.sync = SYNC()
@@ -60,14 +56,24 @@ class GPS():
         self.gsm = gsm
         self.log.log_message("Successfully opened port...")
         signal.signal(signal.SIGINT, self.close_connection)
-        self.minDistance = 50
         self.times_that_difference_is_over_threshold = 0
-        self.timer_start_and_stop_gps = 600
         self.gpsIsOn = True
+
+    def read_configuration(self, file_path, key):
+        try:
+            with open(file_path, 'r') as file:
+                configuration_data = json.load(file)
+                return configuration_data.get(key, None)
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Error: File '{file_path}' not found.") from e
+        except json.JSONDecodeError as e:
+            raise json.JSONDecodeError(f"Error decoding JSON in file '{file_path}': {e}", doc=e.doc, pos=e.pos) from e
+        except Exception as e:
+            raise Exception(f"An error occurred: {e}") from e           
 
     def createTable(self):
         try:
-            self.conn = sqlite3.connect('/home/pi/data/generalDB.db', check_same_thread=False)
+            self.conn = sqlite3.connect(self.dbPath, check_same_thread=False)
             with self.conn:
                 cursor = self.conn.cursor()
                 cursor.execute('''
@@ -97,7 +103,7 @@ class GPS():
     
     def get_configuration(self, config_name):
         try:
-            conn = sqlite3.connect('/home/pi/data/generalDB.db', check_same_thread=False)
+            conn = sqlite3.connect(self.dbPath, check_same_thread=False)
             with conn:
                 cursor = conn.cursor()
                 cursor.execute('''
@@ -128,10 +134,10 @@ class GPS():
 
     def close_connection(self,signal, frame):
         self.log.log_message("Closing connection and exiting gracefully...")
-        self.port.write('AT+CGNSTP\r\n'.encode("utf-8"))  # Stop GPS service
-        self.port.close()  # Close the serial port
-        self.cursor.close()  # Close the database cursor
-        self.conn.close()  # Close the database connection
+        self.port.write('AT+CGNSTP\r\n'.encode("utf-8"))  
+        self.port.close()  
+        self.cursor.close()  
+        self.conn.close() 
         exit(0)
     
     def writeCommand(self,command):
@@ -143,28 +149,28 @@ class GPS():
     def initDevice(self):
         try:
             self.writeCommand('AT\r\n'.encode("utf-8"))
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  
             time.sleep(0.1)
 
-            self.writeCommand('AT+CGNSPWR=1\r\n'.encode("utf-8"))    	 	# to power the GPS
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.writeCommand('AT+CGNSPWR=1\r\n'.encode("utf-8"))    	 	
+            rcv = self.port.readline()  
+            self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}")  
             time.sleep(.1)
 
-            self.writeCommand('AT+CGNSIPR=115200\r\n'.encode("utf-8")) # Set the baud rate of GPS
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT+CGNSIPR=115200: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.writeCommand('AT+CGNSIPR=115200\r\n'.encode("utf-8")) #
+            rcv = self.port.readline()  
+            self.log.log_message(f"Answer to AT+CGNSIPR=115200: {rcv.decode('utf-8').strip()}")  
             time.sleep(.1)
 
-            self.writeCommand('AT+CGNSTST=1\r\n'.encode("utf-8"))    # Send data received to UART
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT+CGNSTST=1: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.writeCommand('AT+CGNSTST=1\r\n'.encode("utf-8"))   
+            rcv = self.port.readline()  
+            self.log.log_message(f"Answer to AT+CGNSTST=1: {rcv.decode('utf-8').strip()}")  
             time.sleep(.1)
 
-            self.writeCommand('AT+CGNSINF\r\n'.encode("utf-8"))   	# log_message the GPS information
+            self.writeCommand('AT+CGNSINF\r\n'.encode("utf-8"))   
             rcv = self.port.readline()
-            self.log.log_message(f"Answer to AT+CGNSINF: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.log.log_message(f"Answer to AT+CGNSINF: {rcv.decode('utf-8').strip()}")  
             time.sleep(.1)
         except Exception as e:
             self.log.log_message(f"Caught exc. on initDevice: {e}")
@@ -175,13 +181,13 @@ class GPS():
             self.log.log_message("I'm going to turn off the GPS...")
 
             self.writeCommand('AT\r\n'.encode("utf-8"))
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  
             time.sleep(0.1)
 
-            self.writeCommand('AT+CGNSPWR=0\r\n'.encode("utf-8"))  # to power off the GPS
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT+CGNSPWR=0: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.writeCommand('AT+CGNSPWR=0\r\n'.encode("utf-8")) 
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to AT+CGNSPWR=0: {rcv.decode('utf-8').strip()}")  
             time.sleep(.1)
         except Exception as e:
             self.log.log_message(f"Caught exc. on stopDevice: {e}")
@@ -191,13 +197,13 @@ class GPS():
         try:
             self.log.log_message("I'm going to turn on the GPS...")
             self.writeCommand('AT\r\n'.encode("utf-8"))
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  
             time.sleep(0.1)
 
             self.writeCommand('AT+CGNSPWR=1\r\n'.encode("utf-8"))  # to power off the GPS
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            rcv = self.port.readline()  
+            self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}")  
             time.sleep(.1)
         except Exception as e:
             self.log.log_message(f"Caught exc. on startDevice: {e}")
@@ -205,7 +211,7 @@ class GPS():
         
     def populeDb(self):
         try:
-            self.conn = sqlite3.connect('/home/pi/data/generalDB.db', check_same_thread=False)
+            self.conn = sqlite3.connect(self.dbPath, check_same_thread=False)
             cursor = self.conn.cursor()
             cursor.execute('''
                 INSERT INTO gps (latitude, longitude, altitude, groundSpeed, latDir, longDir, satellites,
@@ -221,14 +227,9 @@ class GPS():
         
     def getLastCoordinates(self):
         try:
-            conn = sqlite3.connect('/home/pi/data/generalDB.db', check_same_thread=False)
+            conn = sqlite3.connect(self.dbPath, check_same_thread=False)
             cursor = conn.cursor()
             try:
-                # Modify the query to exclude rows where latitude or longitude is 0 or NULL
-                # cursor.execute("SELECT latitude, longitude FROM gps "
-                #             "WHERE latitude IS NOT NULL AND longitude IS NOT NULL "
-                #             "AND latitude != 0 AND longitude != 0 "
-                #             "ORDER BY timestamp DESC LIMIT 1")
                 cursor.execute("SELECT latitude, longitude FROM gps ORDER BY id DESC LIMIT 1")                
                 row = cursor.fetchone()
                 if row:
@@ -258,18 +259,16 @@ class GPS():
                     elapsed_timeGps = current_time - start_timeGps
                     fd = self.port.readline()  
                     if fd:
-                        decoded_data = fd.decode("utf-8").strip()  # Decode and strip newline characters
-                        #self.log.log_message(f"Reading port: {decoded_data}")
+                        decoded_data = fd.decode("utf-8").strip() 
                         if b'$GNRMC' in fd:
-                            #self.log.log_message(f"Reading GNRMC string: {decoded_data}")
-                            data_parts = decoded_data.split(',')  # Split data by comma
+                            data_parts = decoded_data.split(',')  
                             if len(data_parts) >= 13:
-                                self.time_data = data_parts[1]  # Time
-                                self.groundSpeed = data_parts[7]      # Speed
+                                self.time_data = data_parts[1]  
+                                self.groundSpeed = data_parts[7]      
                             else:
                                 self.log.log_message(f"Not enough informations from GNRMC data...")
                         elif b'$GLGSV' in fd:
-                            data_parts = decoded_data.split(',')  # Split data by comma
+                            data_parts = decoded_data.split(',') 
                             if len(data_parts) >= 8:
                                 self.totalMessages = int(data_parts[1]) 
                                 message_number = int(data_parts[2])  
@@ -292,7 +291,7 @@ class GPS():
                                 self.satelitesInView = satellites_in_view
                                 self.satInformation =  satellites_info
                         elif b'$GLGSA' in fd:
-                            data_parts = decoded_data.split(',')  # Split data by comma
+                            data_parts = decoded_data.split(',')  
                             if len(data_parts) >= 17:
                                 self.mode1 = data_parts[2]  
                                 self.mode2 = data_parts[3]  
@@ -316,7 +315,7 @@ class GPS():
                                         self.log.log_message(f"Difference between coordinates is {lastDistance} meters")
                                         if lastDistance > self.minDistance:
                                             self.times_that_difference_is_over_threshold += 1
-                                            if self.times_that_difference_is_over_threshold > 50:
+                                            if self.times_that_difference_is_over_threshold > self.minRunDistance:
                                                 self.times_that_difference_is_over_threshold = 0
                                                 self.log.log_message(f"GPS is moved; it's time to send a notification message...")
                                                 isMessageSent = self.gsm.readMessageByNumber("007",True,lastDistance)                            
@@ -349,12 +348,12 @@ class GPS():
                                 self.log.log_message(f"Could not extract values from msg: {e}")
 
                         elif b'$GNVTG' in fd:
-                            data_parts = decoded_data.split(',')  # Split data by comma
+                            data_parts = decoded_data.split(',') 
                             if len(data_parts) >= 9:
-                                self.true_track = data_parts[1]  # True track made good
-                                self.magnetic_track = data_parts[3]  # Magnetic track made good
-                                self.ground_speed_knots = data_parts[5]  # Ground speed in knots
-                                self.ground_speed_kmh = data_parts[7]  # Ground speed in km/h
+                                self.true_track = data_parts[1] 
+                                self.magnetic_track = data_parts[3] 
+                                self.ground_speed_knots = data_parts[5]  
+                                self.ground_speed_kmh = data_parts[7] 
                         elif b'+CMT' in fd:
                             number = self.port.readline().decode('utf-8').strip()
                             self.log.log_message(f"I received a message: {fd}")
@@ -419,7 +418,7 @@ class GPS():
             dlon = lon2 - lon1
             a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
             c = 2 * atan2(sqrt(a), sqrt(1 - a))
-            distance = R * c * 1000  # Convert to meters
+            distance = R * c * 1000 
             return distance
         except Exception as e:
             self.log.log_message(f"Caught exc. on haversine_distance: {e}")

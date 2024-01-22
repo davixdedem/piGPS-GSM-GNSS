@@ -1,14 +1,17 @@
-import picamera
+import json
 import logging
+import picamera
 from datetime import datetime
 from gpiozero import Button
+
+CONFIGURATION_PATH = "/home/pi/piHat/configuration"
 
 class CAMERA():
     def __init__(self) -> None:
         self.camera = picamera.PiCamera()
         self.setupDevice()
-        self.log_file = '/home/pi/piHat/logs/gps.log'
-        self.videoPath = "/home/pi/Videos/"
+        self.log_file = self.read_configuration(CONFIGURATION_PATH,"logPath")
+        self.videoPath = self.read_configuration(CONFIGURATION_PATH,"videoPath")
         self.video_filename = None
         self.debug = True
         logging.basicConfig(
@@ -18,6 +21,18 @@ class CAMERA():
                 logging.FileHandler(self.log_file),
                 logging.StreamHandler()
             ])
+
+    def read_configuration(self, file_path, key):
+        try:
+            with open(file_path, 'r') as file:
+                configuration_data = json.load(file)
+                return configuration_data.get(key, None)
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Error: File '{file_path}' not found.") from e
+        except json.JSONDecodeError as e:
+            raise json.JSONDecodeError(f"Error decoding JSON in file '{file_path}': {e}", doc=e.doc, pos=e.pos) from e
+        except Exception as e:
+            raise Exception(f"An error occurred: {e}") from e
 
     def setupDevice(self):
         try:

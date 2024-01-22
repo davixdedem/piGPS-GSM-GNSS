@@ -1,27 +1,43 @@
+import json
 import time
 import serial
 import logging
 import sqlite3
 import RPi.GPIO as GPIO
 
+CONFIGURATION_PATH = "/home/pi/piHat/configuration"
+
 class GSM():
     def __init__(self,port) -> None:
-    
-        self.receiverNumber = "+393475487544"
-        self.localSMSC = "+393358824940"
-        #AT+CSCA="+393358824940"
-        #AT+CENG? --> Query the neighbords cell towers
-        self.apn = "ibox.tim.it"
-        self.debug = True
         self.log = LOG()
-        self.conn = sqlite3.connect('/home/pi/data/generalDB.db', check_same_thread=False)
         self.port = port
+        self.debug = True
         self.isGpsStopped = False
-        self.powerPin = 4
-        self.timer_keep_send_message = 600
+        
+        self.receiverNumber = self.read_configuration(CONFIGURATION_PATH,"receiverNumber") 
+        self.localSMSC = self.read_configuration(CONFIGURATION_PATH,"localSMSC")  
+        self.apn = self.read_configuration(CONFIGURATION_PATH,"apn")   
+        self.dbPath = self.read_configuration(CONFIGURATION_PATH,"dbPath")  
+        self.keyTextMessage = self.read_configuration(CONFIGURATION_PATH,"keyTextMessage")  
+        self.powerPin = self.read_configuration(CONFIGURATION_PATH,"powerPin")  
+        self.timer_keep_send_message = self.read_configuration(CONFIGURATION_PATH,"timer_keep_send_message")
 
+        self.conn = sqlite3.connect(self.dbPath, check_same_thread=False)
+                
         self.createTableMessage()
         self.createTableGps()   
+
+    def read_configuration(self, file_path, key):
+        try:
+            with open(file_path, 'r') as file:
+                configuration_data = json.load(file)
+                return configuration_data.get(key, None)
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Error: File '{file_path}' not found.") from e
+        except json.JSONDecodeError as e:
+            raise json.JSONDecodeError(f"Error decoding JSON in file '{file_path}': {e}", doc=e.doc, pos=e.pos) from e
+        except Exception as e:
+            raise Exception(f"An error occurred: {e}") from e      
 
     def edit_configuration(self, config_name, new_config_value):
         try:
@@ -83,8 +99,8 @@ class GSM():
     def callNumber(self):
         try:
             self.writeCommand(f'AT\r\n'.encode("utf-8"))
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            rcv = self.port.readline()  
+            self.log.log_message(f"Answer to AT: {rcv.decode('utf-8').strip()}")  
             time.sleep(1)   
 
             self.writeCommand(f'AT+CGNSPWR=0\r\n'.encode("utf-8"))
@@ -93,8 +109,8 @@ class GSM():
             time.sleep(1)              
 
             self.writeCommand(f'ATD{self.receiverNumber};\r\n'.encode("utf-8"))
-            rcv = self.port.readline()  # Read until a new line is encountered
-            self.log.log_message(f"Answer to ATD: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            rcv = self.port.readline() 
+            self.log.log_message(f"Answer to ATD: {rcv.decode('utf-8').strip()}")  
             time.sleep(60)
 
             self.writeCommand(f'AT+CGNSPWR=1\r\n'.encode("utf-8"))
@@ -111,7 +127,6 @@ class GSM():
             conn = sqlite3.connect('/home/pi/data/generalDB.db', check_same_thread=False)
             cursor = conn.cursor()
             try:
-                # Modify the query to exclude rows where latitude or longitude is 0 or NULL
                 cursor.execute("SELECT latitude, longitude, timestamp FROM gps "
                             "WHERE latitude IS NOT NULL AND longitude IS NOT NULL "
                             "AND latitude != 0 AND longitude != 0 "
@@ -144,12 +159,12 @@ class GSM():
         try:
             self.writeCommand(f'AT+CSTT={self.apn}\r\n'.encode("utf-8"))
             rcv = self.port.readline() 
-            self.log.log_message(f"Answer to AT+CSTT={self.apn}: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.log.log_message(f"Answer to AT+CSTT={self.apn}: {rcv.decode('utf-8').strip()}")  
             time.sleep(1)            
 
             self.writeCommand(f'AT+CNMI=2,2,0,0,0\r\n'.encode("utf-8"))
             rcv = self.port.readline() 
-            self.log.log_message(f"Answer to AT+CNMI=2,2,0,0,0: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.log.log_message(f"Answer to AT+CNMI=2,2,0,0,0: {rcv.decode('utf-8').strip()}") 
             time.sleep(1)         
 
             self.writeCommand(f'AT+CMGF=1\r\n'.encode("utf-8"))
@@ -163,7 +178,7 @@ class GSM():
         try:
             self.writeCommand(f'AT+CSTT={self.apn}\r\n'.encode("utf-8"))
             rcv = self.port.readline() 
-            self.log.log_message(f"Answer to AT+CSTT={self.apn}: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+            self.log.log_message(f"Answer to AT+CSTT={self.apn}: {rcv.decode('utf-8').strip()}") 
             time.sleep(1)                        
         except Exception as e:
             self.log.log_message(f"Caught exc. on setupSIM: {e}")
@@ -174,7 +189,7 @@ class GSM():
             if not stop:
                 self.writeCommand(f'AT+CGNSPWR=1\r\n'.encode("utf-8"))
                 rcv = self.port.readline() 
-                self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}")  # Decode and strip newline characters
+                self.log.log_message(f"Answer to AT+CGNSPWR=1: {rcv.decode('utf-8').strip()}")  
                 time.sleep(1)    
             else:
                 self.writeCommand(f'AT+CGNSPWR=0\r\n'.encode("utf-8"))

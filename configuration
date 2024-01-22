@@ -1,0 +1,15 @@
+{
+    "receiverNumber": "YOUR NUMBER",
+    "localSMSC": "YOUR SMSC NUMBER",
+    "apn": "YOUR APN",
+    "dbPath": "/home/pi/data/generalDB.db",
+    "minDistance": 50,
+    "keyTextMessage": "007",  
+    "logPath": "/home/pi/piHat/logs/gps.log",
+    "powerPin": 4,
+    "timer_keep_send_message": 600,
+    "timer": 60,
+    "timer_sync_ntp": 150,
+    "videoPath": "/home/pi/Videos/",
+    "minRunDistance": 80
+}

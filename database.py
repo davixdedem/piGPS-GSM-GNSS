@@ -20,21 +20,15 @@ class DATABASE():
         try:
             conn = sqlite3.connect(self.dbPath)
             cursor = conn.cursor()
-
-            # Check if tables exist before attempting to delete
             existing_tables = [table[0] for table in cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")]
-
             for table, date_column in self.tables_to_flush.items():
                 if table in existing_tables:
                     five_days_ago = datetime.now() - timedelta(days=5)
                     five_days_ago_str = five_days_ago.strftime("%Y-%m-%d")
-                    
-                    # Using a parameterized query to avoid SQL injection
                     query = f"DELETE FROM {table} WHERE {date_column} < ?"
                     cursor.execute(query, (five_days_ago_str,))
                 else:
                     self.log_message(f"Table {table} does not exist in the database.")
-
             conn.commit()
             conn.close()
             return True
