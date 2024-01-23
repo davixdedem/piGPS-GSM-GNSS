@@ -33,32 +33,24 @@ In the context of this project, we use **GSM/GPRS/GNSS board** and **PiCamera fo
 All Raspberry Pi series<br>
 
 # 2. Device Preparation <div id="preparazione"></div>
-**1 - Plug the board on the array of GPIO**<br>
+**1 - Plug GPS/GSM/GNSS board on the array of GPIO in order to match all pins**<br>
 
-**2 - Plug the PiCamera's flat into the connector of Raspberry Pi**<br>
+**2 - Connect GPS antenna and the one for GSM**<br>
 
-**3 - Turn on device, be sure to enable RX/TX Uart**<br>
+**3 - Plug the PiCamera's flat into the connector of Raspberry Pi**<br>
 
-**4 - Clone this repository and move in**<br>
+**4 - Turn on device, be sure to enable RX/TX Uart**<br>
+
+**5 - Clone this repository and move in**<br>
   
-**5 - System Configuration** <div id="configurazione"></div>
+**6 - System Configuration** <div id="configurazione"></div>
 Open "configuration" file and fill the empty values with yours: 
 ```
 {
     "receiverNumber": "", #<--Your number where to receive alerts--
     "localSMSC": "", #<--Smsc number--
     "apn": "", #<--SIM card's APN--
-    "dbPath": "/home/pi/data/generalDB.db",
-    "minDistance": 50,
-    "keyTextMessage": "007",  
-    "logPath": "/home/pi/piHat/logs/gps.log",
-    "powerPin": 4,
-    "timer_keep_send_message": 600,
-    "timer": 60,
-    "timer_sync_ntp": 150,
-    "videoPath": "/home/pi/Videos/",
-    "minRunDistance": 100,
-    "pinNumber": 17
+    ...
 }
 ```
 
