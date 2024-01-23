@@ -68,30 +68,26 @@ Open "configuration" file and fill the empty values with yours:
 
 # 2. How to use it? <div id="howtouseit"></div>
 Once the system is running he will start searching for its GPS coordinates and listening for incoming calls or messagges.
-All the coordinates will be stored to "generalDB.db" every n minutes(depending on the configuration). As a result, the system will be able to retrieve the last record stored in the database.
-If you were to call the sytem or send it a text message with "007", it will respond with the last coordinates received. Before doing so, ensure you have filled in the correct configuration with your telephone number to receive messages back.
-
+All the coordinates will be stored to ***generalDB.db*** every n minutes(depending on the configuration). As a result, the system will be able to retrieve the last record stored in the database.
+If you were to call the sytem or send it a text message with ***007***, it will respond with the last coordinates received. Before doing so, ensure you have filled in the correct configuration with your telephone number to receive messages back.
 Another interesting feature is the presence of a system that checks if GPS has been moved over various distances. Since the project is developed in Europe, the result of the distance is in **meters**, but we could add new units of measurement in the next revisions.
-
+If you have enabled the RaspiCamera in the configurations, you will be able to record a video when an impulse is received on GPIO 17(or that one you choosen on configurations).
 
 - # **4. Pros & Cons** <div id="pros-and-cons"></div>
 | **Pros**                                      | **Cons**                                                |
 |-----------------------------------------------|----------------------------------------------------------|
-| Wide coverage                                 | Limited bandwidth                                        |
-| Low power consumption                         | Limited transmission speed                               |
-| Obstacle penetration                          | Interference                                             |
-| Reduced costs                                 | Security concerns                                        |
-| Application versatility                       | Data packet limitations                                  | 
+| Global coverage                               | Limited Data Speeds                                      |
+| Efficiency in Data Transmission               | Network Congestion                                       |
+| Standardized Technology                       | Technology Aging                                         |
+| Low Power Consumption                         | Security concerns                                        |
+| Support for IoT Applications                  | Spectrum Allocation Challenges                           | 
 
 - # **5. Curiosities** <div id="curiosities"></div>
-1. LoRa utilizes sub-gigahertz radio frequency bands such as 433 MHz, 868 MHz (Europe), and 915 MHz (North America).
-2. It ensures long-range transmissions (over 10 km in rural areas, 3–5 km in highly urbanized zones) with low power consumption.
-3. It consists of two parts: LoRa, the physical layer, and LoRaWAN (Long Range Wide Area Network), the upper layers.
-4. New LoRa chipsets feature reduced power consumption, increased transmission power, and smaller sizes compared to previous generations.
-5. It offers geolocation capabilities to triangulate device positions using timestamps from gateways.
-6. Provides long-range connectivity for Internet of Things (IoT) devices across various sectors.
-7. Reference to [AT Command User Manual](https://resource.heltec.cn/download/CubeCell/AT_Command_list/CubeCell_Series_AT_Command_User_Manual_V0.4.pdf)
-8. Reference to [Understanding LoRa](https://development.libelium.com/lora_networking_guide/understanding-lora)
+1. Honey Never Spoils: Archaeologists have discovered pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly edible. Honey's long shelf life is due to its low water content and acidic pH, creating an inhospitable environment for bacteria and microorganisms.
+2. Bananas Are Berries, But Strawberries Aren't: In botanical terms, bananas qualify as berries because they develop from a single ovary, but strawberries, despite their name, are not berries. Botanically speaking, strawberries are considered aggregate fruits as they form from a flower with multiple ovaries.
+3. Cows Have Best Friends: Research has shown that cows form close friendships and can become stressed when separated from their preferred companions. They have been observed displaying signs of distress when isolated from their social groups.
+4. A Group of Flamingos is Called a "Flamboyance": The collective noun for a group of flamingos is quite fittingly called a "flamboyance." These vibrant birds are known for their striking pink color and distinctive long legs.
+5. The Eiffel Tower Can Grow Taller in the Summer: Due to thermal expansion, the Eiffel Tower can grow taller during hot summer days. The metal expands in the heat, causing the structure to expand and contract by a few inches.
 
 - # **6. Support** <div id="support"></div>
 For any questions, bug reports, or feature requests, please open a new issue in our GitHub repository. We will strive to respond as quickly as possible.
