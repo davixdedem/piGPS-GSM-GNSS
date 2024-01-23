@@ -32,7 +32,7 @@ In the context of this project, we use **GSM/GPRS/GNSS board** and **PiCamera fo
 ## Compatible SBCs?
 All Raspberry Pi series<br>
 
-- # 2. Device Preparation <div id="preparazione"></div>
+# 2. Device Preparation <div id="preparazione"></div>
 **1 - Plug the board on the array of GPIO**<br>
 
 **2 - Plug the PiCamera's flat into the connector of Raspberry Pi**<br>
@@ -66,7 +66,7 @@ Open "configuration" file and fill the empty values with yours:
 - `sudo bash install.sh` <br>
 - `sudo systemctl start gps` <br>
 
-# 2. How to use it? <div id="howtouseit"></div>
+# 3. How to use it? <div id="howtouseit"></div>
 Once the system is running he will start searching for its GPS coordinates and listening for incoming calls or messagges.
 All the coordinates will be stored to ***generalDB.db*** every n minutes(depending on the configuration). As a result, the system will be able to retrieve the last record stored in the database.
 If you were to call the sytem or send it a text message with ***007***, it will respond with the last coordinates received. Before doing so, ensure you have filled in the correct configuration with your telephone number to receive messages back.
