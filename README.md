@@ -41,7 +41,7 @@ All Raspberry Pi series<br>
 
 **4 - Clone this repository and move in**<br>
   
-**5 - System Configuration** <div id="configurazione"></div><br>
+**5 - System Configuration** <div id="configurazione"></div>
 Open "configuration" file and fill the empty values with yours: 
 ```
 {
