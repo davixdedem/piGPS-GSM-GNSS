@@ -1,6 +1,5 @@
 **Raspberry Pi - GSM/GPRS/GNSS/CCTV**
 
-![Logo](hatModule.jpg) <br>
 This project integrates GSM (Global System for Mobile Communications) for mobile communication, GPRS (General Packet Radio Service) for efficient data transmission, and GNSS (Global Navigation Satellite System) for precise positioning. Additionally, it incorporates a CCTV (Closed-Circuit Television) system using video cameras for surveillance. Together, these technologies enable a comprehensive solution with mobile communication, data connectivity, accurate navigation, and visual monitoring capabilities."<br>
 
 - ## **Description**
@@ -23,7 +22,7 @@ In the context of this project, we use the following **GSM/GPRS/GNSS board**: (h
 **USB Cable**: USB cable to connect the board to the Smartphone.
 
 ## Where to GSM/GPRS/GNSS board for Raspberry Pi?
-![HTTCAB01](httcab01.png)<br>
+![HTTCAB01](hatgps.png)<br>
 *CubeCell – AB01 Dev-Board*<br>
 [Heltec](https://heltec.org/project/htcc-ab01-v2/)|[Amazon](https://www.amazon.it/LoRaWAN-sviluppo-ASR6501-energetico-Intelligent/dp/B07ZH7NL38/ref=sr_1_1?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2E73JV8F1KPLV&keywords=heltec+cubecell&qid=1701754977&sprefix=heltec+cubecel%2Caps%2C148&sr=8-1)|[Aliexpress](https://it.aliexpress.com/item/1005005444339915.html?spm=a2g0o.productlist.main.3.1d7150b2TFr0YZ&algo_pvid=b9b676a0-1f19-4aaf-807d-e712d7758b64&algo_exp_id=b9b676a0-1f19-4aaf-807d-e712d7758b64-1&pdp_npi=4%40dis%21EUR%2116.48%2116.48%21%21%2117.45%21%21%402103209b17017550135711815e8815%2112000033106113757%21sea%21IT%210%21AB&curPageLogUid=SzqEk2lL0gTd)<br>
 
