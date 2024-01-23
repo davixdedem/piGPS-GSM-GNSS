@@ -1,13 +1,14 @@
 **Raspberry Pi - GSM/GPRS/GNSS/CCTV**
 
-This project integrates GSM (Global System for Mobile Communications) for mobile communication, GPRS (General Packet Radio Service) for efficient data transmission, and GNSS (Global Navigation Satellite System) for precise positioning. Additionally, it incorporates a CCTV (Closed-Circuit Television) system using video cameras for surveillance. Together, these technologies enable a comprehensive solution with mobile communication, data connectivity, accurate navigation, and visual monitoring capabilities."<br>
+This project integrates GSM (Global System for Mobile Communications) for mobile communication, GPRS (General Packet Radio Service) for efficient data transmission, and GNSS (Global Navigation Satellite System) for precise positioning. Additionally, it incorporates a CCTV (Closed-Circuit Television) system using video cameras for surveillance. Together, these technologies enable a comprehensive solution with mobile communication, data connectivity, accurate navigation, and visual monitoring capabilities.<br>
 
 - ## **Description**
-Thanks to the GSM/GPRS/GNSS board for Raspberry Pi, we will be able to monitor the current position of our SBC using GPS coordinates by GSM text messages. 
-On the GPIO side, they will listen for all impulses and if one of those is detected, the PiCamera will start recording a video.<br>
-![Screencast](screencast.png) <br>
+Thanks to the GSM/GPRS/GNSS board for Raspberry Pi, we will be able to monitor the current position of our SBC using GPS coordinates and GSM text messages recording a video if a GPIO will get an impulse. <br>
+In the context of this project, we use the followings:<br>
 
-In the context of this project, we use the following **GSM/GPRS/GNSS board**: (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf)
+**GSM/GPRS/GNSS board**: <br> (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf), <br>
+
+**PiCamera for Raspberry Pi**: <br> ('[https://tlk.dedemapp.com/Machines/Details/203181](https://www.amazon.it/Electreeks%C2%AE-fotocamera-Raspberry-automatico-infrarossi/dp/B08C5GDG9Q?th=1)') <br>
 
 - ## Step By Step
 1. [Prerequisites](#prerequisites)<br>
@@ -21,17 +22,24 @@ In the context of this project, we use the following **GSM/GPRS/GNSS board**: (h
 **CubeCell – AB01 Dev-Board**: Heltec development board.<br>
 **USB Cable**: USB cable to connect the board to the Smartphone.
 
-## Where to GSM/GPRS/GNSS board for Raspberry Pi?
-![HTTCAB01](hatgps.png)<br>
-*CubeCell – AB01 Dev-Board*<br>
-[Heltec](https://heltec.org/project/htcc-ab01-v2/)|[Amazon](https://www.amazon.it/LoRaWAN-sviluppo-ASR6501-energetico-Intelligent/dp/B07ZH7NL38/ref=sr_1_1?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2E73JV8F1KPLV&keywords=heltec+cubecell&qid=1701754977&sprefix=heltec+cubecel%2Caps%2C148&sr=8-1)|[Aliexpress](https://it.aliexpress.com/item/1005005444339915.html?spm=a2g0o.productlist.main.3.1d7150b2TFr0YZ&algo_pvid=b9b676a0-1f19-4aaf-807d-e712d7758b64&algo_exp_id=b9b676a0-1f19-4aaf-807d-e712d7758b64-1&pdp_npi=4%40dis%21EUR%2116.48%2116.48%21%21%2117.45%21%21%402103209b17017550135711815e8815%2112000033106113757%21sea%21IT%210%21AB&curPageLogUid=SzqEk2lL0gTd)<br>
+## Where to buy GSM/GPRS/GNSS board for Raspberry Pi?
+![GSM/GPRS/GSNN Board](hatgps.png)<br>
+*GSM/GPRS/GSNN Board*<br>
+[Amazon](https://www.amazon.it/Electreeks%C2%AE-fotocamera-Raspberry-automatico-infrarossi/dp/B08C5GDG9Q?th=1)|[Aliexpress](https://www.aliexpress.us/item/2251832597184177.html?spm=a2g0o.productlist.main.1.2ef2365f0gDFCP&algo_pvid=89b3c4b3-a9dc-4238-84d1-948b387117d4&algo_exp_id=89b3c4b3-a9dc-4238-84d1-948b387117d4-0&pdp_npi=4%40dis%21EUR%2113.83%219.96%21%21%2114.71%2110.59%21%402103225217060051148274358e38cd%2112000037102820125%21sea%21US%214652921009%21&curPageLogUid=uDZvQ76DhRfl&utparam-url=scene%3Asearch%7Cquery_from%3A)<br>
 
-## Compatible USB Cables?
-![TypeC/MicroUSB](cable.png)<br>*USB Type-C/Micro USB*<br>
-![TypeC/MicroUSB](cable2.png)<br>*USB Type-C/Micro USB*<br>
+## Compatible SBCs?
+All Raspberry Pi series<br>
 
 - # 2. Device Preparation <div id="preparazione"></div>
-**1 - Run the bash in order to make a new daemon**<br>
+**1 - Plug the board on the array of GPIO**<br>
+
+**2 - Plug the PiCamera's flat into the connector of Raspberry Pi**<br>
+
+**3 - Turn on device, be sure to enable RX/TX Uart**<br>
+
+**4 - Clone this repository and move in**<br>
+
+**3 - Run the bash in order to make a new daemon**<br>
 - `sudo bash install.sh`
 
 - # 3. System Configuration <div id="configurazione"></div>
