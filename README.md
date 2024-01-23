@@ -1,38 +1,33 @@
 **Raspberry Pi - GSM/GPRS/GNSS/CCTV**
 
-This project integrates GSM (Global System for Mobile Communications) for mobile communication, GPRS (General Packet Radio Service) for efficient data transmission, and GNSS (Global Navigation Satellite System) for precise positioning. Additionally, it incorporates a CCTV (Closed-Circuit Television) system using video cameras for surveillance. Together, these technologies enable a comprehensive solution with mobile communication, data connectivity, accurate navigation, and visual monitoring capabilities.<br>
+This project integrates **GSM** (Global System for Mobile Communications) for mobile communication, **GPRS** (General Packet Radio Service) for efficient data transmission, and **GNSS** (Global Navigation Satellite System) for precise positioning. Additionally, it incorporates a CCTV (Closed-Circuit Television) system using video cameras for surveillance. Together, these technologies enable a comprehensive solution with mobile communication, data connectivity, accurate navigation, and visual monitoring capabilities.<br>
 
 - ## **Description**
 Thanks to the GSM/GPRS/GNSS board for Raspberry Pi, we will be able to monitor the current position of our SBC using GPS coordinates and GSM text messages recording a video if a GPIO will get an impulse. <br>
-In the context of this project, we use the followings:<br>
-
-**GSM/GPRS/GNSS board**: <br> (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf), <br>
-
-**PiCamera for Raspberry Pi**: <br> ('[https://tlk.dedemapp.com/Machines/Details/203181](https://www.amazon.it/Electreeks%C2%AE-fotocamera-Raspberry-automatico-infrarossi/dp/B08C5GDG9Q?th=1)') <br>
+In the context of this project, we use **GSM/GPRS/GNSS board** and **PiCamera for Raspberry Pi**. <br>
 
 - ## Step By Step
 1. [Prerequisites](#prerequisites)<br>
 2. [Device Preparation](#preparazione)<br>
-3. [Setup](#configurazione)<br>
-4. [How to use it](#howtouseit)<br>
-5. [Pros & Cons](#pros-and-cons)<br>
-6. [Curiosities](#curiosities)<br>
-7. [Support](#support)<br>
+3. [How to use it](#howtouseit)<br>
+4. [Pros & Cons](#pros-and-cons)<br>
+5. [Curiosities](#curiosities)<br>
+6. [Support](#support)<br>
    
-- # 1. Prerequisites <div id="prerequisites"></div>
-**CubeCell – AB01 Dev-Board**: Heltec development board.<br>
-**USB Cable**: USB cable to connect the board to the Smartphone.
+# 1. Prerequisites <div id="prerequisites"></div>
+- **Raspberry Pi**: Should be good all series of Raspberry(https://www.raspberrypi.com/)<br>
+- **GSM/GPRS/GNSS board**: <br> (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf), <br>
+- **PiCamera for Raspberry Pi**: <br> ('[https://tlk.dedemapp.com/Machines/Details/203181](https://www.amazon.it/Electreeks%C2%AE-fotocamera-Raspberry-automatico-infrarossi/dp/B08C5GDG9Q?th=1)') <br>
 
 ## Where to buy GSM/GPRS/GNSS board for Raspberry Pi?
 ![GSM/GPRS/GSNN Board](hatgps.png)<br>
 *GSM/GPRS/GSNN Board*<br>
-[Amazon](https://www.amazon.it/Electreeks%C2%AE-fotocamera-Raspberry-automatico-infrarossi/dp/B08C5GDG9Q?th=1)|[Aliexpress](https://www.aliexpress.us/item/2251832597184177.html?spm=a2g0o.productlist.main.1.2ef2365f0gDFCP&algo_pvid=89b3c4b3-a9dc-4238-84d1-948b387117d4&algo_exp_id=89b3c4b3-a9dc-4238-84d1-948b387117d4-0&pdp_npi=4%40dis%21EUR%2113.83%219.96%21%21%2114.71%2110.59%21%402103225217060051148274358e38cd%2112000037102820125%21sea%21US%214652921009%21&curPageLogUid=uDZvQ76DhRfl&utparam-url=scene%3Asearch%7Cquery_from%3A)<br>
+[Amazon]()|[Aliexpress]()<br>
 
 ## Where to buy Raspberry Pi IR Camera?
-![GSM/GPRS/GSNN Board](picamera.jpg)<br>
-*GSM/GPRS/GSNN Board*<br>
+![RaspiCameraIR](picamera.jpg)<br>
+*RaspiCamera IR*<br>
 [Amazon](https://www.amazon.it/Electreeks%C2%AE-fotocamera-Raspberry-automatico-infrarossi/dp/B08C5GDG9Q?th=1)|[Aliexpress](https://www.aliexpress.us/item/2251832597184177.html?spm=a2g0o.productlist.main.1.2ef2365f0gDFCP&algo_pvid=89b3c4b3-a9dc-4238-84d1-948b387117d4&algo_exp_id=89b3c4b3-a9dc-4238-84d1-948b387117d4-0&pdp_npi=4%40dis%21EUR%2113.83%219.96%21%21%2114.71%2110.59%21%402103225217060051148274358e38cd%2112000037102820125%21sea%21US%214652921009%21&curPageLogUid=uDZvQ76DhRfl&utparam-url=scene%3Asearch%7Cquery_from%3A)<br>
-
 
 ## Compatible SBCs?
 All Raspberry Pi series<br>
@@ -45,17 +40,14 @@ All Raspberry Pi series<br>
 **3 - Turn on device, be sure to enable RX/TX Uart**<br>
 
 **4 - Clone this repository and move in**<br>
-
-**3 - Run the bash in order to make a new daemon**<br>
-- `sudo bash install.sh`
-
-- # 3. System Configuration <div id="configurazione"></div>
-**1 - Open "configuration" file and fill the empty values with yours:** <br>
+  
+**5 - System Configuration** <div id="configurazione"></div><br>
+Open "configuration" file and fill the empty values with yours: <br>
 ```
 {
-    "receiverNumber": "",
-    "localSMSC": "",
-    "apn": "",
+    "receiverNumber": "", #<--Your number where to receive alerts--
+    "localSMSC": "", #<--Smsc number--
+    "apn": "", #<--SIM card's APN--
     "dbPath": "/home/pi/data/generalDB.db",
     "minDistance": 50,
     "keyTextMessage": "007",  
@@ -70,7 +62,10 @@ All Raspberry Pi series<br>
 }
 ```
 
-- # 4. How to use it <div id="howtouseit"></div>
+**6 - Run the bash in order to make a new daemon**<br>
+- `sudo bash install.sh`
+
+# 2. How to use it? <div id="howtouseit"></div>
 
 - # **4. Pros & Cons** <div id="pros-and-cons"></div>
 | **Pros**                                      | **Cons**                                                |
