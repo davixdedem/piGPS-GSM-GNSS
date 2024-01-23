@@ -71,7 +71,7 @@ Once the system is running he will start searching for its GPS coordinates and l
 All the coordinates will be stored to ***generalDB.db*** every n minutes(depending on the configuration). As a result, the system will be able to retrieve the last record stored in the database.
 If you were to call the sytem or send it a text message with ***007***, it will respond with the last coordinates received. Before doing so, ensure you have filled in the correct configuration with your telephone number to receive messages back.
 Another interesting feature is the presence of a system that checks if GPS has been moved over various distances. Since the project is developed in Europe, the result of the distance is in **meters**, but we could add new units of measurement in the next revisions.
-If you have enabled the RaspiCamera in the configurations, you will be able to record a video when an impulse is received on GPIO 17(or that one you choosen on configurations).
+If you have enabled the RaspiCamera in the configurations, you will be able to record a video when an impulse is received on GPIO 17(or the one you choosen on configurations).
 
 # **4. Pros & Cons** <div id="pros-and-cons"></div>
 | **Pros**                                      | **Cons**                                                |
