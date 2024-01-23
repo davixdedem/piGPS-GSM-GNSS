@@ -14,9 +14,10 @@ In the context of this project, we use the followings:<br>
 1. [Prerequisites](#prerequisites)<br>
 2. [Device Preparation](#preparazione)<br>
 3. [Setup](#configurazione)<br>
-4. [Pros & Cons](#pros-and-cons)<br>
-5. [Curiosities](#curiosities)<br>
-6. [Support](#support)<br>
+4. [How to use it](#howtouseit)<br>
+5. [Pros & Cons](#pros-and-cons)<br>
+6. [Curiosities](#curiosities)<br>
+7. [Support](#support)<br>
    
 - # 1. Prerequisites <div id="prerequisites"></div>
 **CubeCell – AB01 Dev-Board**: Heltec development board.<br>
@@ -62,6 +63,8 @@ All Raspberry Pi series<br>
     "pinNumber": 17
 }
 ```
+
+- # 4. How to use it <div id="howtouseit"></div>
 
 - # **4. Pros & Cons** <div id="pros-and-cons"></div>
 | **Pros**                                      | **Cons**                                                |
