@@ -73,7 +73,7 @@ If you were to call the sytem or send it a text message with ***007***, it will 
 Another interesting feature is the presence of a system that checks if GPS has been moved over various distances. Since the project is developed in Europe, the result of the distance is in **meters**, but we could add new units of measurement in the next revisions.
 If you have enabled the RaspiCamera in the configurations, you will be able to record a video when an impulse is received on GPIO 17(or that one you choosen on configurations).
 
-- # **4. Pros & Cons** <div id="pros-and-cons"></div>
+# **4. Pros & Cons** <div id="pros-and-cons"></div>
 | **Pros**                                      | **Cons**                                                |
 |-----------------------------------------------|----------------------------------------------------------|
 | Global coverage                               | Limited Data Speeds                                      |
@@ -82,14 +82,14 @@ If you have enabled the RaspiCamera in the configurations, you will be able to r
 | Low Power Consumption                         | Security concerns                                        |
 | Support for IoT Applications                  | Spectrum Allocation Challenges                           | 
 
-- # **5. Curiosities** <div id="curiosities"></div>
+# **5. Curiosities** <div id="curiosities"></div>
 1. Triangulation Technique: GPS works based on a process called trilateration, not triangulation as commonly believed. Trilateration involves measuring distances from known points (satellites) to determine an unknown position (receiver). The more satellites involved, the more accurate the position fix.
 2. Relativity Adjustment: Einstein's theory of general relativity plays a role in the accuracy of GPS. The satellites' atomic clocks, which are crucial for precise timing, experience time dilation due to their relative motion and the gravitational field. Without adjustments, GPS accuracy would suffer by several meters per day.
 3. Selective Availability: The U.S. military used to intentionally degrade the accuracy of GPS signals for civilian users. This feature, known as Selective Availability, was turned off in 2000 by the U.S. government, significantly improving GPS accuracy for everyone.
 4. Dual-frequency Receivers: Modern GPS receivers can receive signals on two frequencies (L1 and L5). This dual-frequency capability helps mitigate signal errors caused by the Earth's atmosphere, providing more accurate positioning, especially in challenging environments.
 5. GPS Constellation: The GPS system comprises a constellation of at least 24 satellites orbiting the Earth. These satellites are strategically positioned to ensure that a GPS receiver on Earth can receive signals from at least four satellites at any given time, allowing for accurate positioning and navigation.
 
-- # **6. Support** <div id="support"></div>
+# **6. Support** <div id="support"></div>
 For any questions, bug reports, or feature requests, please open a new issue in our GitHub repository. We will strive to respond as quickly as possible.
 For more urgent inquiries or other issues, you can contact us via email at davide.polli@dedem.it. Please include complete details about the encountered problem for a faster resolution.
 We are committed to continually improving the application and value every contribution and feedback from our community.
