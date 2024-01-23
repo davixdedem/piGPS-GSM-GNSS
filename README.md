@@ -42,7 +42,7 @@ All Raspberry Pi series<br>
 **4 - Clone this repository and move in**<br>
   
 **5 - System Configuration** <div id="configurazione"></div><br>
-Open "configuration" file and fill the empty values with yours: <br>
+Open "configuration" file and fill the empty values with yours: 
 ```
 {
     "receiverNumber": "", #<--Your number where to receive alerts--
