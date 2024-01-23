@@ -83,11 +83,11 @@ If you have enabled the RaspiCamera in the configurations, you will be able to r
 | Support for IoT Applications                  | Spectrum Allocation Challenges                           | 
 
 - # **5. Curiosities** <div id="curiosities"></div>
-1. Honey Never Spoils: Archaeologists have discovered pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly edible. Honey's long shelf life is due to its low water content and acidic pH, creating an inhospitable environment for bacteria and microorganisms.
-2. Bananas Are Berries, But Strawberries Aren't: In botanical terms, bananas qualify as berries because they develop from a single ovary, but strawberries, despite their name, are not berries. Botanically speaking, strawberries are considered aggregate fruits as they form from a flower with multiple ovaries.
-3. Cows Have Best Friends: Research has shown that cows form close friendships and can become stressed when separated from their preferred companions. They have been observed displaying signs of distress when isolated from their social groups.
-4. A Group of Flamingos is Called a "Flamboyance": The collective noun for a group of flamingos is quite fittingly called a "flamboyance." These vibrant birds are known for their striking pink color and distinctive long legs.
-5. The Eiffel Tower Can Grow Taller in the Summer: Due to thermal expansion, the Eiffel Tower can grow taller during hot summer days. The metal expands in the heat, causing the structure to expand and contract by a few inches.
+1. Triangulation Technique: GPS works based on a process called trilateration, not triangulation as commonly believed. Trilateration involves measuring distances from known points (satellites) to determine an unknown position (receiver). The more satellites involved, the more accurate the position fix.
+2. Relativity Adjustment: Einstein's theory of general relativity plays a role in the accuracy of GPS. The satellites' atomic clocks, which are crucial for precise timing, experience time dilation due to their relative motion and the gravitational field. Without adjustments, GPS accuracy would suffer by several meters per day.
+3. Selective Availability: The U.S. military used to intentionally degrade the accuracy of GPS signals for civilian users. This feature, known as Selective Availability, was turned off in 2000 by the U.S. government, significantly improving GPS accuracy for everyone.
+4. Dual-frequency Receivers: Modern GPS receivers can receive signals on two frequencies (L1 and L5). This dual-frequency capability helps mitigate signal errors caused by the Earth's atmosphere, providing more accurate positioning, especially in challenging environments.
+5. GPS Constellation: The GPS system comprises a constellation of at least 24 satellites orbiting the Earth. These satellites are strategically positioned to ensure that a GPS receiver on Earth can receive signals from at least four satellites at any given time, allowing for accurate positioning and navigation.
 
 - # **6. Support** <div id="support"></div>
 For any questions, bug reports, or feature requests, please open a new issue in our GitHub repository. We will strive to respond as quickly as possible.
