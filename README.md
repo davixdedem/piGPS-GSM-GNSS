@@ -15,7 +15,7 @@ In the context of this project, we use **GSM/GPRS/GNSS board** and **PiCamera fo
 6. [Support](#support)<br>
    
 # 1. Prerequisites <div id="prerequisites"></div>
-- **Raspberry Pi**: Should be good all series of Raspberry(https://www.raspberrypi.com/)<br>
+- **Raspberry Pi**: It should work well with all Raspberry Pi models.(https://www.raspberrypi.com/)<br>
 - **GSM/GPRS/GNSS board**: <br> (https://files.waveshare.com/upload/4/4a/GSM_GPRS_GNSS_HAT_User_Manual_EN.pdf), <br>
 - **PiCamera for Raspberry Pi**: <br> ('[https://tlk.dedemapp.com/Machines/Details/203181](https://www.amazon.it/Electreeks%C2%AE-fotocamera-Raspberry-automatico-infrarossi/dp/B08C5GDG9Q?th=1)') <br>
 
